@@ -189,7 +189,9 @@
 
 	pinctrl-0 = <&sdxc_iot_mode>;
 	pinctrl-1 = <&sdxc_iot_mode>;
-	cd-inverted;
+	non-removable;
+	broken-cd;
+	//cd-inverted;
 };
 
 &wmac {
