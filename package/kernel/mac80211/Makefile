@@ -92,6 +92,7 @@ config-$(CONFIG_PACKAGE_MAC80211_MESH) += MAC80211_MESH
 include ath.mk
 include broadcom.mk
 include intel.mk
+include esp.mk
 include marvell.mk
 include ralink.mk
 include realtek.mk
