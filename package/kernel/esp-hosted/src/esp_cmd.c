@@ -14,9 +14,7 @@
 #include "esp_kernel_port.h"
 #include "esp_stats.h"
 
-#define CMD_TIMEOUT_BASE	(15)		// original is 5
-
-#define COMMAND_RESPONSE_TIMEOUT (CMD_TIMEOUT_BASE * HZ)
+#define COMMAND_RESPONSE_TIMEOUT (5 * HZ)
 u8 ap_bssid[MAC_ADDR_LEN];
 extern u32 raw_tp_mode;
 

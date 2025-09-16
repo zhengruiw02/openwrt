@@ -14,7 +14,6 @@
 #include "esp_kernel_port.h"
 #include "esp_utils.h"
 
-#define USE_KMEMDMP	0
 /**
   * @brief WiFi PHY rate encodings
   *
@@ -313,7 +312,7 @@ struct wireless_dev *esp_cfg80211_add_iface(struct wiphy *wiphy,
 	esp_verbose("Updated priv[%u] to %px\n",
                 esp_nw_if_num, esp_wdev->adapter->priv[esp_nw_if_num]);
 	dev_net_set(ndev, wiphy_net(wiphy));
-	SET_NETDEV_DEV(ndev, wiphy_dev(esp_wdev->wdev.wiphy));		// wiphy_dev: get wiphy dev pointer, return wiphy->dev.parent;
+	SET_NETDEV_DEV(ndev, wiphy_dev(esp_wdev->wdev.wiphy));
 	esp_wdev->wdev.netdev = ndev;
 	esp_wdev->wdev.iftype = type;
 
@@ -1230,21 +1229,10 @@ int esp_add_wiphy(struct esp_adapter *adapter)
 #ifdef CONFIG_AP_MODE
 	wiphy->interface_modes |= BIT(NL80211_IFTYPE_AP);
 #endif
-
 	wiphy->bands[NL80211_BAND_2GHZ] = &esp_wifi_bands_2ghz;
 	if (adapter->chipset == ESP_FIRMWARE_CHIP_ESP32C5) {
 		wiphy->bands[NL80211_BAND_5GHZ] = &esp_wifi_bands_5ghz;
 	}
-	
-	////
-	// int n_bitrates = wiphy->bands[NL80211_BAND_2GHZ]->n_bitrates;
-	// esp_info("esp_wifi_bands_2ghz n_bitrates = %d\n", n_bitrates);
-	// int i = 0;
-	// for (i = 0; i < n_bitrates; i++) {		
-	// 	esp_info("curr sband->bitrates[i].bitrate %d\n", wiphy->bands[NL80211_BAND_2GHZ]->bitrates[i].bitrate);
-	// }
-	//////////////
-
 	/* Initialize cipher suits */
 	if (adapter->chipset == ESP_FIRMWARE_CHIP_ESP32C3 ||
 	    adapter->chipset == ESP_FIRMWARE_CHIP_ESP32S3 ||
@@ -1280,15 +1268,7 @@ int esp_add_wiphy(struct esp_adapter *adapter)
 	wiphy->features |= NL80211_FEATURE_SK_TX_STATUS;
 
 	ret = wiphy_register(wiphy);
-	//// prints
-	// n_bitrates = wiphy->bands[NL80211_BAND_2GHZ]->n_bitrates;
 
-	// esp_info("esp_wifi_bands_2ghz n_bitrates = %d\n", n_bitrates);
-	// i = 0;
-	// for (i = 0; i < n_bitrates; i++) {		
-	// 	esp_info("curr sband->bitrates[i].bitrate %d\n", wiphy->bands[NL80211_BAND_2GHZ]->bitrates[i].bitrate);
-	// }
-	//////////////
 	return ret;
 }
 

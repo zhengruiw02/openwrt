@@ -22,8 +22,6 @@
 #include "esp_utils.h"
 #include "esp_kernel_port.h"
 
-#define CT_LOG_TAG	"[CT Log]"
-
 extern u32 raw_tp_mode;
 #define MAX_WRITE_RETRIES       2
 #define TX_MAX_PENDING_COUNT    200
@@ -50,6 +48,8 @@ static const struct sdio_device_id esp_devices[] = {
 	{ SDIO_DEVICE(ESP_VENDOR_ID_1, ESP_DEVICE_ID_ESP32_2) },
 	{ SDIO_DEVICE(ESP_VENDOR_ID_2, ESP_DEVICE_ID_ESP32C6_1) },
 	{ SDIO_DEVICE(ESP_VENDOR_ID_2, ESP_DEVICE_ID_ESP32C6_2) },
+	{ SDIO_DEVICE(ESP_VENDOR_ID_3, ESP_DEVICE_ID_ESP32C5_1) },
+	{ SDIO_DEVICE(ESP_VENDOR_ID_3, ESP_DEVICE_ID_ESP32C5_2) },
 	{}
 };
 
@@ -744,9 +744,6 @@ static int esp_probe(struct sdio_func *func,
 			hz = host->f_min;
 		if (hz > host->f_max)
 			hz = host->f_max;
-		
-		esp_info("%s host clock is %d\n", CT_LOG_TAG, hz);
-		
 		host->ios.clock = hz;
 		host->ops->set_ios(host, &host->ios);
 	}
@@ -888,6 +885,7 @@ int esp_validate_chipset(struct esp_adapter *adapter, u8 chipset)
 	switch(chipset) {
 	case ESP_FIRMWARE_CHIP_ESP32:
 	case ESP_FIRMWARE_CHIP_ESP32C6:
+	case ESP_FIRMWARE_CHIP_ESP32C5:
 		adapter->chipset = chipset;
 		esp_info("Chipset=%s ID=%02x detected over SDIO\n", esp_chipname_from_id(chipset), chipset);
 		ret = 0;
